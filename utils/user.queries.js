@@ -1,9 +1,8 @@
-const { dynamoDB } = require("../../../services/dynamodb");
+const { dynamoDB } = require("../services/dynamodb");
 
 const TableName = process.env.USERS_TABLE;
 
 const findUser = async (userName) => {
-  console.log({ userName });
   try {
     const query = {
       TableName,

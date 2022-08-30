@@ -50,6 +50,21 @@ functions:
             allowCredentials: false
             cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
 
+            functions:
+  user:
+    handler: functions/user/index.handler
+    events:
+      - http:
+          path: /user/{proxy+}
+          method: ANY
+          cors:
+            origin:
+              - "*"
+            headers:
+              - "*"
+            allowCredentials: false
+            cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+
 resources:
   Resources:
     helloBuildUsersDynamoDB:

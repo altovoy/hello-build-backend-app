@@ -1,4 +1,4 @@
-const { putUser, findUser } = require("./utils/queries");
+const { putUser, findUser } = require("../../utils/user.queries");
 
 const signUpUser = async (req, res) => {
   const { user } = req.body;
