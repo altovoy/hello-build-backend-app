@@ -1,0 +1,64 @@
+service: hello-build-backend-app
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  versionFunctions: false
+  stackTags:
+    lm_app: "hello-build-backend-app"
+  tags:
+    lm_app: "hello-build-backend-app"
+  region: us-east-1
+  profile: "default"
+  timeout: 30
+  stage: prod
+  environment:
+    STAGE: prod
+    CORS: "*"
+    USERS_TABLE: hello-build-users
+  iam.role.statements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "Fn::GetAtt": [helloBuildUsersDynamoDB, Arn]
+
+functions:
+  auth:
+    handler: functions/auth/index.default
+    events:
+      - http:
+          path: /auth/{proxy+}
+          method: ANY
+          cors:
+            origin:
+              - "*"
+            headers:
+              - "*"
+            allowCredentials: false
+            cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+
+resources:
+  Resources:
+    helloBuildUsersDynamoDB:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: "hello-build-users"
+        AttributeDefinitions:
+          - AttributeName: userName
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: userName
+            KeyType: HASH
+          - AttributeName: email
+            KeyType: RANGE
