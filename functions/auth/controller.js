@@ -4,7 +4,7 @@ const signUpUser = async (req, res) => {
   const { user } = req.body;
 
   try {
-    const findUserResponse = await findUser();
+    const findUserResponse = await findUser(user.userName);
     if (findUserResponse.Items.length > 0) {
       res.status(409).json({ message: "User already exists" });
     } else {

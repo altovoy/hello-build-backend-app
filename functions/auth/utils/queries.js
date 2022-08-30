@@ -1,8 +1,9 @@
-import dynamoDB from "../../../services/dynamodb";
+const { dynamoDB } = require("../../../services/dynamodb");
 
 const TableName = process.env.USERS_TABLE;
 
 const findUser = async (userName) => {
+  console.log({ userName });
   try {
     const query = {
       TableName,
@@ -16,7 +17,8 @@ const findUser = async (userName) => {
       },
     };
     return await dynamoDB.get(query);
-  } catch {
+  } catch (error) {
+    console.log(error);
     throw new Error("Error getting user from dynamoDB");
   }
 };
@@ -32,7 +34,8 @@ const putUser = ({ userName, password }) => {
       },
     };
     return dynamoDB.put(query);
-  } catch {
+  } catch (error) {
+    console.log(error);
     throw new Error("Error inserting user in dynamoDB");
   }
 };

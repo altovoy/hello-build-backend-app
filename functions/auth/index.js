@@ -6,6 +6,6 @@ const app = express();
 const api = require("./router.js");
 app.use(cors({ origin: process.env.CORS }));
 app.use(express.json());
-app.use("/v1/auth", api);
+app.use("/auth", api);
 
-module.exports.default = serverless(app);
+module.exports.handler = serverless(app);

@@ -49,7 +49,7 @@ const update = (params) =>
     });
   });
 
-module.exports.default = {
+module.exports.dynamoDB = {
   put,
   get,
   update,

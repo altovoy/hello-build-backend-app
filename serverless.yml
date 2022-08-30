@@ -1,6 +1,9 @@
 service: hello-build-backend-app
 frameworkVersion: "3"
 
+include:
+  - node_modules/serverless-offline/**
+
 provider:
   name: aws
   runtime: nodejs14.x
@@ -17,22 +20,24 @@ provider:
     STAGE: prod
     CORS: "*"
     USERS_TABLE: hello-build-users
-  iam.role.statements:
-    - Effect: Allow
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource:
-        - "Fn::GetAtt": [helloBuildUsersDynamoDB, Arn]
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - "Fn::GetAtt": [helloBuildUsersDynamoDB, Arn]
 
 functions:
   auth:
-    handler: functions/auth/index.default
+    handler: functions/auth/index.handler
     events:
       - http:
           path: /auth/{proxy+}
@@ -54,11 +59,7 @@ resources:
         AttributeDefinitions:
           - AttributeName: userName
             AttributeType: S
-          - AttributeName: email
-            AttributeType: S
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: userName
             KeyType: HASH
-          - AttributeName: email
-            KeyType: RANGE
