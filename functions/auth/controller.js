@@ -22,8 +22,12 @@ const loginUser = async (req, res) => {
   try {
     const findUserResponse = await findUser(user.userName);
     if (findUserResponse.Items.length > 0) {
+      let userToResponse = findUserResponse.Items[0];
       if (user.password === findUserResponse.Items[0].password) {
-        res.status(200).json({ message: "User access granted" });
+        delete userToResponse.password;
+        res
+          .status(200)
+          .json({ message: "User access granted", user: userToResponse });
       } else {
         res.status(401).json({ message: "Incorrect password" });
       }
