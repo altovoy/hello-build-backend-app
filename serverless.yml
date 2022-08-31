@@ -20,6 +20,7 @@ provider:
     STAGE: prod
     CORS: "*"
     USERS_TABLE: hello-build-users
+    GIT_API_URI: https://api.github.com
   iam:
     role:
       statements:

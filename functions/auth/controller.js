@@ -1,4 +1,5 @@
 const { putUser, findUser } = require("../../utils/user.queries");
+const { fetchGithubUser } = require("./services/github");
 
 const signUpUser = async (req, res) => {
   const { user } = req.body;
@@ -8,8 +9,9 @@ const signUpUser = async (req, res) => {
     if (findUserResponse.Items.length > 0) {
       res.status(409).json({ message: "User already exists" });
     } else {
+      await fetchGithubUser(user.userName);
       await putUser(user);
-      res.status(200).json({ message: "User already created" });
+      res.status(200).json({ message: "User created correctly" });
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
